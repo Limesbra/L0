@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Главная страница</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 50vh;
+            margin: 0;
+        }
+    
+        header {
+            position: absolute;
+            top: 0;
+            text-align: center;
+        }
+        form {
+            text-align: center;
+        }
+        footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+        }
+    </style>
+    <header>
+        <h1>Сервис получения информации о заказах</h1>
+    </header>
+
+    <form id = "upload" enctype="multipart/form-data" method="post" action="/upload">
+        <p><input type="file" name="jsonfile" accept="application/json">
+        <input type="submit" value="Отправить"></p>
+    </form> 
+
+    <form id = "show">
+        <p>Введите ID заказа:</p>
+        <p><input name="id" pattern="^[0-9a-zA-Z]+$"></p>
+        <p><input type="submit" value="Показать"></p>
+    </form>
+
+    <!-- <table>
+        <thead><th>Id</th><th>Model</th><th>Company</th><th>Price</th></thead>
+        {{range . }}
+        <tr>
+            <td>{{.Id}}</td>
+            <td>{{.Model}}</td>
+            <td>{{.Company}}</td>
+            <td>{{.Price}}</td>
+        </tr>
+        {{end}}
+    </table> -->
+
+    <footer>
+        <p>&copy; 2024 Картечкин Виталий</p>
+    </footer>
+
+
+    <!-- <script>
+        document.getElementById('upload').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            var formElement = document.getElementById('upload');
+            var formData = new FormData(formElement);
+            
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            }).then(response => {
+                console.log('File uploaded successfully');
+            }).catch(error => {
+                console.error('Error uploading file:', error);
+            });
+        });
+    </script> -->
+
+</body>
+</html>
+
+<!-- js scrypt fetch func -->
