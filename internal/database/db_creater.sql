@@ -1,8 +1,13 @@
+-- drop TABLE IF EXISTS orders;
+-- drop TABLE IF EXISTS delivery;
+-- drop TABLE IF EXISTS payment;
+-- drop TABLE IF EXISTS orderitems;
+-- drop TABLE IF EXISTS items;
 
 CREATE DATABASE information_service;
 
 Create table orders (
-    order_uid varchar(50),
+    order_uid varchar(50) PRIMARY KEY,
     track_number varchar(50),
     "entry" varchar(50),
     locale varchar(50),
@@ -23,8 +28,8 @@ Create table delivery(
     city varchar(50),
     "address" varchar(50),
     region varchar(50),
-    email varchar(50)
-    CONSTRAINT fk_delivery_order_uid FOREIGN KEY (order_uid) REFERENCES Orders(order_uid)
+    email varchar(50),
+    FOREIGN KEY (order_uid) REFERENCES Orders(order_uid)
 );
 
 Create table payment (
@@ -37,17 +42,12 @@ Create table payment (
     bank varchar(50),
     delivery_cost int,
     goods_total int,
-    custom_fee int
-    CONSTRAINT fk_payment_transaction FOREIGN KEY (transaction) REFERENCES Orders(order_uid)
-);
-
-Create table orderitems (
-    order_uid varchar(50),
-    chrt_id int
+    custom_fee int,
+    FOREIGN KEY (transaction) REFERENCES Orders(order_uid)
 );
 
 Create table items (
-    chrt_id int,
+    chrt_id int PRIMARY KEY,
     track_number varchar(50),
     price int,
     rid varchar(50),
@@ -58,5 +58,13 @@ Create table items (
     nm_id int,
     brand varchar(50),
     "status" int
-    CONSTRAINT fk_items_track_number FOREIGN KEY (track_number) REFERENCES Orders(track_number)
 );
+
+Create table orderitems (
+    order_uid varchar(50),
+    chrt_id int,
+    FOREIGN KEY (order_uid) REFERENCES Orders(order_uid),
+    FOREIGN KEY (chrt_id) REFERENCES Items(chrt_id),
+    PRIMARY KEY (order_uid, chrt_id)
+);
+

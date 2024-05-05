@@ -16,7 +16,9 @@ func init() {
 	orders := db.GetAllOrders()
 	cashe = cashe.Warming(orders)
 	cacheSubscribe(&cashe)
+	fmt.Println("init")
 	DbSubscribe(&db)
+	fmt.Println("init2")
 
 }
 
@@ -51,3 +53,4 @@ func cacheSubscribe(c *cache.TypeCache) {
 		return
 	}
 }
+// nats-server -c /путь/к/nats-server.conf

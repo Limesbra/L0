@@ -1,4 +1,0 @@
-stan:
-  cluster_id: my-cluster
-  store: file
-  dir: ./messages

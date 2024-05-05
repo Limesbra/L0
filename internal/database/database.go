@@ -48,6 +48,10 @@ func (db *Database) AddOrder(order model.Order) error {
 	if err != nil {
 		return err
 	}
+	err = db.addItemInfo(order)
+	if err != nil {
+		return err
+	}
 	err = db.addItemsInfo(order)
 	if err != nil {
 		return err
@@ -93,9 +97,9 @@ func (db *Database) addPaymentInfo(order model.Order) error {
 	return nil
 }
 
-func (db *Database) addItemsInfo(order model.Order) error {
+func (db *Database) addItemInfo(order model.Order) error {
 	for _, item := range order.Items {
-		_, err := db.db.Exec("Insert into items VALUES ($1, $2, $3, $4, $5)",
+		_, err := db.db.Exec("Insert into items VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)",
 			item.Chrt_id,
 			item.Track_number,
 			item.Price,
@@ -107,6 +111,32 @@ func (db *Database) addItemsInfo(order model.Order) error {
 			item.Nm_id,
 			item.Brand,
 			item.Status,
+		)
+		if err != nil {
+			fmt.Println(err)
+			return err
+		}
+	}
+	return nil
+}
+
+func (db *Database) addItemsInfo(order model.Order) error {
+	type item_info struct {
+		Order_uid string `json:"order_uid" db:"order_uid"`
+		Chrt_id   int    `json:"chrt_id" db:"chrt_id"`
+	}
+	items := order.Items
+	var suit []item_info
+	for _, item := range items {
+		suit = append(suit, item_info{
+			Order_uid: order.Order_uid,
+			Chrt_id:   item.Chrt_id,
+		})
+	}
+	for _, item := range suit {
+		_, err := db.db.Exec("Insert into orderitems VALUES ($1, $2)",
+			item.Order_uid,
+			item.Chrt_id,
 		)
 		if err != nil {
 			fmt.Println(err)

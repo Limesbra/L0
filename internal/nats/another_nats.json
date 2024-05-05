@@ -1,0 +1,7 @@
+ {
+    "server_name": "my-nats-server",
+    "cluster_id": "my-cluster",
+    "host": "0.0.0.0",
+    "port": 4222,
+    "store_dir": "./messages"
+  }
