@@ -2,6 +2,7 @@ package service
 
 import (
 	"L0/internal/model"
+	"L0/internal/nats"
 	"encoding/json"
 	"fmt"
 	"html/template"
@@ -46,7 +47,11 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		http.Redirect(w, r, "/", http.StatusSeeOther)
-		fmt.Println(order)
+
+		var srvNats nats.Service
+		srvNats.Connect("produce_upload")
+		srvNats.Publish("upload_consumer", filybytes)
+		srvNats.Close()
 	}
 }
 

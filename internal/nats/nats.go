@@ -6,9 +6,14 @@ import (
 	"github.com/nats-io/stan.go"
 )
 
+// Структура Service представляет набор методов для работы с NATS Streaming.
 type Service struct {
 	nc   stan.Conn
 	nsub stan.Subscription
+}
+
+type Consumer interface {
+	Consume(data []byte) error
 }
 
 // Connect устанавливает соединение с кластером NATS Streaming и сохраняет полученное соединение в поле nc структуры Service.
@@ -45,8 +50,10 @@ func (s *Service) Subscribe(subject string, consumer Consumer) error {
 	return nil
 }
 
-//Publish
-
+// Publish отправляет сообщение на указанный топик.
+// subject - топик, к которому будет отправлено сообщение.
+// data - данные, которые будут отправлены.
+// Возвращает ошибку, если сообщение не удалось отправить.
 func (s *Service) Publish(subject string, data []byte) error {
 	err := s.nc.Publish(subject, data)
 	if err != nil {
@@ -57,6 +64,7 @@ func (s *Service) Publish(subject string, data []byte) error {
 }
 
 // Close закрывает соединение с nats streaming
+// Возвращает ошибку если соединение не удалось закрыть
 func (s *Service) Close() error {
 	if s.nc != nil {
 		err := s.nc.Close()

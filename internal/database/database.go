@@ -3,6 +3,7 @@ package database
 import (
 	"L0/internal/model"
 	"database/sql"
+	"encoding/json"
 	"fmt"
 
 	_ "github.com/lib/pq"
@@ -21,7 +22,7 @@ func (database *Database) Connect() {
 	database.db = db
 }
 
-func (db *Database) AddOrder(order model.Order) {
+func (db *Database) AddOrder(order model.Order) error {
 	_, err := db.db.Exec("INSERT INTO orders VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)",
 		order.Order_uid,
 		order.Track_number,
@@ -37,15 +38,24 @@ func (db *Database) AddOrder(order model.Order) {
 	)
 	if err != nil {
 		fmt.Println(err)
-		return
+		return err
 	}
-	db.addDeliveryInfo(order)
-	db.addPaymentInfo(order)
-	db.addItemsInfo(order)
-
+	err = db.addDeliveryInfo(order)
+	if err != nil {
+		return err
+	}
+	err = db.addPaymentInfo(order)
+	if err != nil {
+		return err
+	}
+	err = db.addItemsInfo(order)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
-func (db *Database) addDeliveryInfo(order model.Order) {
+func (db *Database) addDeliveryInfo(order model.Order) error {
 	_, err := db.db.Exec("INSERT INTO delivery VALUES ($1, $2, $3, $4, $5, $6, $7, $8)",
 		order.Order_uid,
 		order.Delivery.Name,
@@ -58,11 +68,12 @@ func (db *Database) addDeliveryInfo(order model.Order) {
 	)
 	if err != nil {
 		fmt.Println(err)
-		return
+		return err
 	}
+	return nil
 }
 
-func (db *Database) addPaymentInfo(order model.Order) {
+func (db *Database) addPaymentInfo(order model.Order) error {
 	_, err := db.db.Exec("INSERT INTO payment VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)",
 		order.Payment.Transaction,
 		order.Payment.Request_id,
@@ -77,11 +88,12 @@ func (db *Database) addPaymentInfo(order model.Order) {
 	)
 	if err != nil {
 		fmt.Println(err)
-		return
+		return err
 	}
+	return nil
 }
 
-func (db *Database) addItemsInfo(order model.Order) {
+func (db *Database) addItemsInfo(order model.Order) error {
 	for _, item := range order.Items {
 		_, err := db.db.Exec("Insert into items VALUES ($1, $2, $3, $4, $5)",
 			item.Chrt_id,
@@ -98,9 +110,10 @@ func (db *Database) addItemsInfo(order model.Order) {
 		)
 		if err != nil {
 			fmt.Println(err)
-			return
+			return err
 		}
 	}
+	return nil
 }
 
 func (db *Database) GetAllOrders() map[string]model.Order {
@@ -190,4 +203,34 @@ func (db *Database) GetAllOrders() map[string]model.Order {
 		orderMap[order.Order_uid] = order
 	}
 	return orderMap
+}
+
+// func DbSubscribe(db *Database) {
+// 	var srvNats nats.Service
+// 	err := srvNats.Connect("consumer_db")
+// 	if err != nil {
+// 		fmt.Println(err)
+// 		return
+// 	}
+// 	err = srvNats.Subscribe("upload_consumer", db)
+// 	if err != nil {
+// 		fmt.Println(err)
+// 		return
+// 	}
+// }
+
+func (database *Database) Consume(data []byte) error {
+	var order model.Order
+	err := json.Unmarshal(data, &order)
+	if err != nil {
+		return err
+	}
+
+	database.Connect()
+
+	err = database.AddOrder(order)
+	if err != nil {
+		return err
+	}
+	return nil
 }
