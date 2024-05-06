@@ -8,6 +8,8 @@ import (
 
 type TypeCache map[string]model.Order
 
+var PtrCache *TypeCache
+
 func (cache TypeCache) Warming(orders map[string]model.Order) TypeCache {
 	c := make(TypeCache)
 	if len(orders) != 0 {

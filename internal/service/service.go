@@ -1,6 +1,7 @@
 package service
 
 import (
+	"L0/internal/cache"
 	"L0/internal/model"
 	"L0/internal/nats"
 	"encoding/json"
@@ -55,6 +56,22 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func ShowInfo(http.ResponseWriter, *http.Request) {
+func ShowInfo(w http.ResponseWriter, r *http.Request) {
+	id := r.URL.Query().Get("id")
 	fmt.Println("info")
+
+	order, ok := (*cache.PtrCache)[id]
+
+	if !ok {
+		http.Error(w, "Order not found", http.StatusNotFound)
+		return
+	}
+
+	fileJSON, err := json.MarshalIndent(order, "", "  ")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(fileJSON)
 }

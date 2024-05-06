@@ -10,15 +10,15 @@ import (
 
 func init() {
 	var db database.Database
-	cashe := make(cache.TypeCache)
+	cache_ := make(cache.TypeCache)
 
 	db.Connect()
 	orders := db.GetAllOrders()
-	cashe = cashe.Warming(orders)
-	cacheSubscribe(&cashe)
-	fmt.Println("init")
+	cache_ = cache_.Warming(orders)
+	cacheSubscribe(&cache_)
 	DbSubscribe(&db)
-	fmt.Println("init2")
+	cache.PtrCache = &cache_
+	fmt.Println(cache_)
 
 }
 
@@ -53,4 +53,5 @@ func cacheSubscribe(c *cache.TypeCache) {
 		return
 	}
 }
-// nats-server -c /путь/к/nats-server.conf
+
+// nats-streaming-server --config /Users/limesbra/wbtech/L0/internal/nats/another_nats.json
