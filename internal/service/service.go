@@ -4,6 +4,7 @@ import (
 	"L0/internal/cache"
 	"L0/internal/model"
 	"L0/internal/nats"
+	"L0/internal/table"
 	"encoding/json"
 	"fmt"
 	"html/template"
@@ -14,7 +15,7 @@ import (
 func HandleHTTPRequests() {
 	http.HandleFunc("/", handleIndex)
 	http.HandleFunc("/upload", Upload)
-	http.HandleFunc("/show", Upload)
+	http.HandleFunc("/orders", ShowInfo)
 }
 
 func handleIndex(w http.ResponseWriter, r *http.Request) {
@@ -58,7 +59,6 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 
 func ShowInfo(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
-	fmt.Println("info")
 
 	order, ok := (*cache.PtrCache)[id]
 
@@ -66,12 +66,16 @@ func ShowInfo(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Order not found", http.StatusNotFound)
 		return
 	}
-
-	fileJSON, err := json.MarshalIndent(order, "", "  ")
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(fileJSON)
+	fmt.Fprintf(w, "Информация по заказу: %s\n Информация по заказу\n", id)
+	t := table.MakeOrderTable(order)
+	fmt.Fprint(w, (*t).Render())
+	fmt.Fprintf(w, "\n Информация по доставке\n")
+	t = table.MakeDeliveryTable(order)
+	fmt.Fprint(w, (*t).Render())
+	fmt.Fprintf(w, "\n Информация по платежу\n")
+	t = table.MakePaymentTable(order)
+	fmt.Fprint(w, (*t).Render())
+	fmt.Fprintf(w, "\n Информация по позициям\n")
+	t = table.MakeItemsTable(order)
+	fmt.Fprint(w, (*t).Render())
 }

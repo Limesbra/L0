@@ -42,7 +42,8 @@
         <input type="submit" value="Отправить"></p>
     </form> 
 
-    <form id = "show">
+    <form id = "show" method="get" action="/orders">
+    <!-- <form id = "show" method="get"> -->
         <p>Введите ID заказа:</p>
         <p><input name="id" pattern="^[0-9a-zA-Z]+$"></p>
         <p><input type="submit" value="Показать"></p>
@@ -140,7 +141,7 @@
         <p>&copy; 2024 Картечкин Виталий</p>
     </footer>
 
-    <script>
+    <!-- <script>
         document.getElementById('show').addEventListener('submit', function(event) {
             event.preventDefault(); // Предотвращаем стандартное поведение формы (отправку)
     
@@ -165,7 +166,7 @@
                 })
                 .catch(error => console.error(error));
         });
-    </script>
+    </script> -->
 
 </body>
 </html>

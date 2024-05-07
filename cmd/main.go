@@ -18,7 +18,7 @@ func init() {
 	cacheSubscribe(&cache_)
 	DbSubscribe(&db)
 	cache.PtrCache = &cache_
-	fmt.Println(cache_)
+	// fmt.Println(cache_)
 
 }
 
