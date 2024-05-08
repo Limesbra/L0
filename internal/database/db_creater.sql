@@ -67,4 +67,3 @@ Create table orderitems (
     FOREIGN KEY (chrt_id) REFERENCES Items(chrt_id),
     PRIMARY KEY (order_uid, chrt_id)
 );
-

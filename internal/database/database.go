@@ -15,7 +15,7 @@ type Database struct {
 
 // Метод Connect устанавливает соединение с базой данных PostgreSQL
 func (database *Database) Connect() {
-	db, err := sql.Open("postgres", "user=postgres dbname=postgres sslmode=disable")
+	db, err := sql.Open("postgres", "user=limesbra dbname=information_service sslmode=disable")
 	if err != nil {
 		fmt.Println(err)
 		return
