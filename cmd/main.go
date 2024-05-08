@@ -26,7 +26,7 @@ func main() {
 	server.RunServer()
 }
 
-// DbSubscribe подписывает базу данных на получение сообщений от NATS
+// DbSubscribe подписывает базу данных на получение сообщений
 func DbSubscribe(db *database.Database) {
 	var srvNats nats.Service
 	err := srvNats.Connect("consumer_db")
@@ -41,7 +41,7 @@ func DbSubscribe(db *database.Database) {
 	}
 }
 
-// cacheSubscribe подписывает кэш на получение сообщений от NATS
+// cacheSubscribe подписывает кэш на получение сообщений
 func cacheSubscribe(c *cache.TypeCache) {
 	var srvNats nats.Service
 	err := srvNats.Connect("consumer_cache")
