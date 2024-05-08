@@ -6,16 +6,9 @@ import (
 	"github.com/jedib0t/go-pretty/table"
 )
 
-// func MakeTables(order model.Order) []*table.Writer {
-// 	var t []*table.Writer
-// 	t = append(t, makeOrderTable(model.Order{}))
-// 	t = append(t, makeDeliveryTable(model.Order{}))
-// 	t = append(t, makePaymentTable(model.Order{}))
-// 	t = append(t, makeItemsTable(model.Order{}))
-// 	return t
-
-// }
-
+// MakeOrderTable создает таблицу для переданного заказа.
+// Принимает объект заказа в качестве входных данных и возвращает указатель на объект таблицы.
+// Объект таблицы заполняется деталями заказа, такими как order_uid, track_number и т.д.
 func MakeOrderTable(order model.Order) *table.Writer {
 	t := table.NewWriter()
 	t.AppendHeader(table.Row{
@@ -43,10 +36,13 @@ func MakeOrderTable(order model.Order) *table.Writer {
 		order.Sm_id,
 		order.Date_created,
 		order.Oof_shard})
-	t.Render()
 	return &t
 }
 
+// MakePaymentTable создает таблицу для платежей по переданному заказу.
+// Принимает объект заказа в качестве входных данных и возвращает указатель на объект таблицы.
+// Объект таблицы заполняется данными о платеже, такими как transaction, request_id и т.д.
+// Функция добавляет строку с данными платежа в таблицу и возвращает указатель на объект таблицы.
 func MakePaymentTable(order model.Order) *table.Writer {
 	t := table.NewWriter()
 	t.AppendHeader(table.Row{
@@ -72,10 +68,13 @@ func MakePaymentTable(order model.Order) *table.Writer {
 		order.Payment.Delivery_cost,
 		order.Payment.Goods_total,
 		order.Payment.Custom_fee})
-	t.Render()
 	return &t
 }
 
+// MakeDeliveryTable создает таблицу для информации о доставке по переданному заказу.
+// Принимает объект заказа в качестве входных данных и возвращает указатель на объект таблицы.
+// Объект таблицы заполняется данными о доставке, такими как name, phone и т.д.
+// Функция добавляет строку с данными о доставке в таблицу и возвращает указатель на объект таблицы.
 func MakeDeliveryTable(order model.Order) *table.Writer {
 	t := table.NewWriter()
 	t.AppendHeader(table.Row{
@@ -96,10 +95,13 @@ func MakeDeliveryTable(order model.Order) *table.Writer {
 		order.Delivery.Region,
 		order.Delivery.Email,
 	})
-	t.Render()
 	return &t
 }
 
+// MakeItemsTable создает таблицу для элементов (товаров) по переданному заказу.
+// Принимает объект заказа в качестве входных данных и возвращает указатель на объект таблицы.
+// Объект таблицы заполняется данными о товарах, такими как chrt_id, track_number и т.д.
+// Функция добавляет строки с данными о товарах в таблицу и возвращает указатель на объект таблицы.
 func MakeItemsTable(order model.Order) *table.Writer {
 	t := table.NewWriter()
 	t.AppendHeader(table.Row{
@@ -130,6 +132,5 @@ func MakeItemsTable(order model.Order) *table.Writer {
 			order.Items[i].Status,
 		})
 	}
-	t.Render()
 	return &t
 }

@@ -43,130 +43,14 @@
     </form> 
 
     <form id = "show" method="get" action="/orders">
-    <!-- <form id = "show" method="get"> -->
         <p>Введите ID заказа:</p>
         <p><input name="id" pattern="^[0-9a-zA-Z]+$"></p>
         <p><input type="submit" value="Показать"></p>
     </form>
 
-    <table>
-        <caption>Информация о заказах</caption>
-        <thead>
-            <th>Order_uid</th>
-            <th>Track_number</th>
-            <th>Entry</th>
-            <th>Delivery Name</th>
-            <th>Delivery Phone</th>
-            <th>Delivery Zip</th>
-            <th>Delivery City</th>
-            <th>Delivery Address</th>
-            <th>Delivery Region</th>
-            <th>Delivery Email</th>
-            <th>Payment Transaction</th>
-            <th>Payment Request_id</th>
-            <th>Payment Currency</th>
-            <th>Payment Provider</th>
-            <th>Payment Amount</th>
-            <th>Payment Payment_dt</th>
-            <th>Payment Bank</th>
-            <th>Payment Delivery_cost</th>
-            <th>Payment Goods_total</th>
-            <th>Payment Custom_fee</th>
-            <th>Items Chrt_id</th>
-            <th>Items Track_number</th>
-            <th>Items Price</th>
-            <th>Items Rid</th>
-            <th>Items Name</th>
-            <th>Items Sale</th>
-            <th>Items Size</th>
-            <th>Items Total_price</th>
-            <th>Items Nm_id</th>
-            <th>Items Brand</th>
-            <th>Items Status</th>
-            <th>Locale</th>
-            <th>Internal_signature</th>
-            <th>Customer_id</th>
-            <th>Delivery_service</th>
-            <th>Shardkey</th>
-            <th>Sm_id</th>
-            <th>Date_created</th>
-            <th>Oof_shard</th>
-        </thead>
-        {{range .}}
-        <tr>
-            <td>{{.Order_uid}}</td>
-            <td>{{.Track_number}}</td>
-            <td>{{.Entry}}</td>
-            <td>{{.Delivery.Name}}</td>
-            <td>{{.Delivery.Phone}}</td>
-            <td>{{.Delivery.Zip}}</td>
-            <td>{{.Delivery.City}}</td>
-            <td>{{.Delivery.Address}}</td>
-            <td>{{.Delivery.Region}}</td>
-            <td>{{.Delivery.Email}}</td>
-            <td>{{.Payment.Transaction}}</td>
-            <td>{{.Payment.Request_id}}</td>
-            <td>{{.Payment.Currency}}</td>
-            <td>{{.Payment.Provider}}</td>
-            <td>{{.Payment.Amount}}</td>
-            <td>{{.Payment.Payment_dt}}</td>
-            <td>{{.Payment.Bank}}</td>
-            <td>{{.Payment.Delivery_cost}}</td>
-            <td>{{.Payment.Goods_total}}</td>
-            <td>{{.Payment.Custom_fee}}</td>
-            <td>{{range .Items}}{{.Chrt_id}}{{end}}</td>
-            <td>{{range .Items}}{{.Track_number}}{{end}}</td>
-            <td>{{range .Items}}{{.Price}}{{end}}</td>
-            <td>{{range .Items}}{{.Rid}}{{end}}</td>
-            <td>{{range .Items}}{{.Name}}{{end}}</td>
-            <td>{{range .Items}}{{.Sale}}{{end}}</td>
-            <td>{{range .Items}}{{.Size}}{{end}}</td>
-            <td>{{range .Items}}{{.Total_price}}{{end}}</td>
-            <td>{{range .Items}}{{.Nm_id}}{{end}}</td>
-            <td>{{range .Items}}{{.Brand}}{{end}}</td>
-            <td>{{range .Items}}{{.Status}}{{end}}</td>
-            <td>{{.Locale}}</td>
-            <td>{{.Internal_signature}}</td>
-            <td>{{.Customer_id}}</td>
-            <td>{{.Delivery_service}}</td>
-            <td>{{.Shardkey}}</td>
-            <td>{{.Sm_id}}</td>
-            <td>{{.Date_created}}</td>
-            <td>{{.Oof_shard}}</td>
-        </tr>
-        {{end}}
-    </table>
-
     <footer>
         <p>&copy; 2024 Картечкин Виталий</p>
     </footer>
-
-    <!-- <script>
-        document.getElementById('show').addEventListener('submit', function(event) {
-            event.preventDefault(); // Предотвращаем стандартное поведение формы (отправку)
-    
-            // Получаем значение ID заказа из поля ввода
-            var orderId = document.getElementsByName('id')[0].value;
-    
-            // Выполняем запрос к серверу для получения данных заказа
-            fetch('/api/orders/' + orderId)
-                .then(response => response.json())
-                .then(data => {
-                    // Заполняем таблицу данными заказа
-                    var table = document.querySelector('table tbody');
-                    table.innerHTML = '';
-    
-                    var row = table.insertRow();
-                    var cell1 = row.insertCell(0);
-                    var cell2 = row.insertCell(1);
-                    // Заполняем ячейки данными заказа
-                    cell1.innerHTML = data.order_uid;
-                    cell2.innerHTML = data.track_number;
-                    // Добавьте остальные ячейки здесь...
-                })
-                .catch(error => console.error(error));
-        });
-    </script> -->
 
 </body>
 </html>

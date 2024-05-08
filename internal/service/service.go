@@ -12,12 +12,14 @@ import (
 	"net/http"
 )
 
+// HandleHTTPRequests настраивает маршруты HTTP для различных обработчиков
 func HandleHTTPRequests() {
 	http.HandleFunc("/", handleIndex)
 	http.HandleFunc("/upload", Upload)
 	http.HandleFunc("/orders", ShowInfo)
 }
 
+// handleIndex обрабатывает главную страницу, отображая шаблон из файла index.html
 func handleIndex(w http.ResponseWriter, r *http.Request) {
 	// Открываем файл с шаблоном
 	tmpl, err := template.ParseFiles("../web/index.html")
@@ -34,6 +36,7 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// Upload обрабатывает загрузку файла JSON, парсит его и выполняет действия с полученными данными
 func Upload(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		var order model.Order
@@ -57,6 +60,7 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// ShowInfo отображает информацию о заказе на веб-странице, используя данные из кэша
 func ShowInfo(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
 

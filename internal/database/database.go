@@ -13,6 +13,7 @@ type Database struct {
 	db *sql.DB
 }
 
+// Метод Connect устанавливает соединение с базой данных PostgreSQL
 func (database *Database) Connect() {
 	db, err := sql.Open("postgres", "user=postgres dbname=postgres sslmode=disable")
 	if err != nil {
@@ -22,7 +23,9 @@ func (database *Database) Connect() {
 	database.db = db
 }
 
+// Метод AddOrder добавляет заказ в базу данных
 func (db *Database) AddOrder(order model.Order) error {
+	// Вставка информации о заказе в таблицу orders
 	_, err := db.db.Exec("INSERT INTO orders VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)",
 		order.Order_uid,
 		order.Track_number,
@@ -40,6 +43,7 @@ func (db *Database) AddOrder(order model.Order) error {
 		fmt.Println(err)
 		return err
 	}
+	// Добавление информации о доставке, оплате и товарах
 	err = db.addDeliveryInfo(order)
 	if err != nil {
 		return err
@@ -59,6 +63,7 @@ func (db *Database) AddOrder(order model.Order) error {
 	return nil
 }
 
+// Метод addDeliveryInfo добавляет информацию о доставке в базу данных
 func (db *Database) addDeliveryInfo(order model.Order) error {
 	_, err := db.db.Exec("INSERT INTO delivery VALUES ($1, $2, $3, $4, $5, $6, $7, $8)",
 		order.Order_uid,
@@ -77,6 +82,7 @@ func (db *Database) addDeliveryInfo(order model.Order) error {
 	return nil
 }
 
+// Метод addPaymentInfo добавляет информацию об оплате в базу данных
 func (db *Database) addPaymentInfo(order model.Order) error {
 	_, err := db.db.Exec("INSERT INTO payment VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)",
 		order.Payment.Transaction,
@@ -97,6 +103,7 @@ func (db *Database) addPaymentInfo(order model.Order) error {
 	return nil
 }
 
+// Метод addItemInfo добавляет информацию о товаре в базу данных
 func (db *Database) addItemInfo(order model.Order) error {
 	for _, item := range order.Items {
 		_, err := db.db.Exec("Insert into items VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)",
@@ -120,6 +127,7 @@ func (db *Database) addItemInfo(order model.Order) error {
 	return nil
 }
 
+// Метод addItemsInfo добавляет информацию о товарах в базу данных
 func (db *Database) addItemsInfo(order model.Order) error {
 	type item_info struct {
 		Order_uid string `json:"order_uid" db:"order_uid"`
@@ -146,6 +154,7 @@ func (db *Database) addItemsInfo(order model.Order) error {
 	return nil
 }
 
+// Метод GetAllOrders извлекает все заказы из базы данных
 func (db *Database) GetAllOrders() map[string]model.Order {
 	var orders []model.Order
 	type item_info struct {
@@ -235,20 +244,7 @@ func (db *Database) GetAllOrders() map[string]model.Order {
 	return orderMap
 }
 
-// func DbSubscribe(db *Database) {
-// 	var srvNats nats.Service
-// 	err := srvNats.Connect("consumer_db")
-// 	if err != nil {
-// 		fmt.Println(err)
-// 		return
-// 	}
-// 	err = srvNats.Subscribe("upload_consumer", db)
-// 	if err != nil {
-// 		fmt.Println(err)
-// 		return
-// 	}
-// }
-
+// Метод Consume обрабатывает входящие данные и добавляет их в базу данных
 func (database *Database) Consume(data []byte) error {
 	var order model.Order
 	err := json.Unmarshal(data, &order)
