@@ -8,6 +8,7 @@ import (
 	"fmt"
 )
 
+// Инициализация и настройка базы данных, кэша и подписки на сообщения.
 func init() {
 	var db database.Database
 	cache_ := make(cache.TypeCache)
@@ -18,13 +19,14 @@ func init() {
 	cacheSubscribe(&cache_)
 	DbSubscribe(&db)
 	cache.PtrCache = &cache_
-
 }
 
+// Точка входа
 func main() {
 	server.RunServer()
 }
 
+// DbSubscribe подписывает базу данных на получение сообщений от NATS
 func DbSubscribe(db *database.Database) {
 	var srvNats nats.Service
 	err := srvNats.Connect("consumer_db")
@@ -39,6 +41,7 @@ func DbSubscribe(db *database.Database) {
 	}
 }
 
+// cacheSubscribe подписывает кэш на получение сообщений от NATS
 func cacheSubscribe(c *cache.TypeCache) {
 	var srvNats nats.Service
 	err := srvNats.Connect("consumer_cache")
@@ -53,4 +56,4 @@ func cacheSubscribe(c *cache.TypeCache) {
 	}
 }
 
-// nats-streaming-server --config /Users/limesbra/wbtech/L0/internal/nats/another_nats.json
+// nats-streaming-server --config /Users/limesbra/wbtech/L0/internal/nats/nats_streaming.json
